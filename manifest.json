@@ -1,0 +1,21 @@
+{
+  "name": "PAC App - Logo #1 Glitch",
+  "short_name": "PAC App",
+  "description": "TikTok for Campus - Red Glitch Shield",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#fe2c55",
+  "icons": [
+    {
+      "src": "logo.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
