@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>PAC App - Login TikTok Style</title><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"><style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:system-ui}body{background:#000;color:#fff;height:100dvh;overflow:hidden}
+.login{position:fixed;inset:0;z-index:100;background:#fff;color:#000;display:flex;flex-direction:column;overflow:auto}.login.hidden{display:none}
+.login-top{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:1px solid #eee}
+.login-title{font-size:22px;font-weight:900;text-align:center;padding:20px 16px 10px}
+.login-sub{font-size:14px;color:#666;text-align:center;padding:0 30px 20px}
+.login-btns{padding:0 16px;display:flex;flex-direction:column;gap:12px}
+.tiktok-btn{width:100%;border:1px solid #ddd;border-radius:2px;padding:13px;display:flex;align-items:center;gap:12px;font-size:14px;font-weight:700;background:#fff;color:#000;cursor:pointer;position:relative}
+.tiktok-btn i{font-size:20px;width:24px;text-align:center}.tiktok-btn .center{flex:1;text-align:center}
+.tiktok-btn.primary{background:#fe2c55;border-color:#fe2c55;color:#fff}
+.tiktok-btn.google i{color:#4285F4}.tiktok-btn.fb i{color:#1877f2}
+.or{display:flex;align-items:center;gap:12px;padding:20px 16px;color:#999;font-size:12px}.or::before,.or::after{content:'';flex:1;height:1px;background:#eee}
+.signup{padding:20px;text-align:center;font-size:14px;border-top:1px solid #eee;margin-top:auto;background:#fafafa}.signup b{color:#fe2c55;cursor:pointer}
+.terms{font-size:11px;color:#888;text-align:center;padding:14px 24px;line-height:1.4}.terms b{color:#000}
+
+/* After login feed */
+.header{position:fixed;top:0;left:0;right:0;z-index:20;display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:linear-gradient(to bottom,rgba(0,0,0,0.9),transparent)}.logo{font-weight:900}
+.feed{height:100dvh;overflow-y:scroll;scroll-snap-type:y mandatory}::-webkit-scrollbar{display:none}
+.v-card{height:100dvh;scroll-snap-align:start;position:relative;background:#111}.v-card video{width:100%;height:100%;object-fit:cover}
+.overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.8),transparent 40%)}
+.right{position:absolute;right:6px;bottom:100px;z-index:5;display:flex;flex-direction:column;gap:14px}
+.act{color:#fff;text-align:center;font-size:10px;font-weight:700}.act i{width:42px;height:42px;background:rgba(255,255,255,0.12);border-radius:100%;display:flex;align-items:center;justify-content:center;font-size:17px;margin-bottom:3px}
+.left{position:absolute;left:10px;right:64px;bottom:80px;z-index:5}.user{font-weight:800;font-size:13px}.desc{font-size:12px;margin-top:4px}
+.bottom{position:fixed;bottom:0;left:0;right:0;z-index:20;background:rgba(0,0,0,0.96);display:flex;justify-content:space-around;padding:7px 0 14px;border-top:1px solid #1a1a1a}.nav{color:#555;font-size:8px;font-weight:700;text-align:center}.nav.active{color:#fff}.nav i{font-size:18px;display:block}
+
+/* Input modal */
+.modal{position:fixed;inset:0;z-index:200;background:#fff;color:#000;display:none;flex-direction:column}.modal.show{display:flex}
+.modal .top{padding:14px;display:flex;align-items:center;gap:10px;border-bottom:1px solid #eee}
+.input{width:100%;border:1px solid #ddd;padding:14px;font-size:16px;outline:none;margin-bottom:1px;background:#f5f5f5}.input:focus{background:#fff;border-color:#000}
+.btn{width:100%;background:#fe2c55;color:#fff;border:none;padding:14px;font-weight:800;font-size:15px;cursor:pointer;border-radius:2px;margin-top:12px}.btn:disabled{background:#ddd;color:#888}
+</style></head><body>
+
+<!-- TIKTOK STYLE LOGIN -->
+<div id="loginScreen" class="login">
+ <div class="login-top"><i class="fa-solid fa-xmark" style="font-size:18px" onclick="closeLogin()"></i><i class="fa-solid fa-circle-question" style="font-size:18px;color:#888"></i></div>
+ <div class="login-title">Log in to PAC App</div>
+ <div class="login-sub">Manage your account, check notifications, comment on videos, and more.</div>
+ <div class="login-btns">
+  <button class="tiktok-btn" onclick="openPhoneLogin()"><i class="fa-solid fa-user"></i><span class="center">Use phone / email / username</span><i class="fa-solid fa-chevron-right" style="font-size:12px;color:#aaa"></i></button>
+  <button class="tiktok-btn fb" onclick="socialLogin('Facebook')"><i class="fa-brands fa-facebook"></i><span class="center">Continue with Facebook</span></button>
+  <button class="tiktok-btn google" onclick="socialLogin('Google')"><i class="fa-brands fa-google"></i><span class="center">Continue with Google</span></button>
+  <button class="tiktok-btn" onclick="socialLogin('Twitter')"><i class="fa-brands fa-twitter"></i><span class="center">Continue with Twitter</span></button>
+  <button class="tiktok-btn" onclick="socialLogin('Line')"><i class="fa-brands fa-line"></i><span class="center">Continue with LINE</span></button>
+  <button class="tiktok-btn" onclick="socialLogin('Kakao')"><i class="fa-solid fa-comment"></i><span class="center">Continue with KakaoTalk</span></button>
+ </div>
+ <div class="or">OR</div>
+ <div class="login-btns"><button class="tiktok-btn" onclick="continueAsGuest()"><i class="fa-solid fa-user-secret"></i><span class="center">Continue as guest</span></button></div>
+ <div class="terms">By continuing, you agree to PAC's <b>Terms of Service</b> and confirm that you have read PAC's <b>Privacy Policy</b>.</div>
+ <div class="signup">Don't have an account? <b onclick="openSignup()">Sign up</b></div>
+</div>
+
+<!-- PHONE/EMAIL LOGIN (TikTok second screen) -->
+<div id="phoneModal" class="modal">
+ <div class="top"><i class="fa-solid fa-arrow-left" onclick="closePhone()" style="font-size:18px"></i><div style="flex:1;text-align:center;font-weight:700">Log in</div></div>
+ <div style="padding:20px 16px 10px">
+  <div style="display:flex;border-bottom:1px solid #ddd;margin-bottom:20px"><div style="flex:1;text-align:center;padding:10px;font-weight:700;border-bottom:2px solid #000">Phone</div><div style="flex:1;text-align:center;padding:10px;color:#888">Email / Username</div></div>
+  <div style="display:flex;gap:8px;margin-bottom:12px"><select style="border:1px solid #ddd;padding:14px;background:#f5f5f5"><option>UG +256</option><option>KE +254</option><option>US +1</option></select><input id="phoneInput" placeholder="Phone number" class="input" style="flex:1;margin:0"></div>
+  <input id="passInput" type="password" placeholder="Password" class="input">
+  <div style="font-size:12px;color:#666;margin:10px 0">Forgot password?</div>
+  <button id="loginBtn" class="btn" disabled onclick="doLogin()">Log in</button>
+  <div style="text-align:center;margin-top:16px;font-size:13px;color:#666">Log in with code <i class="fa-solid fa-chevron-right" style="font-size:10px"></i></div>
+ </div>
+ <div class="signup">Don't have an account? <b onclick="openSignup()">Sign up</b></div>
+</div>
+
+<!-- MAIN FEED (After login) -->
+<div id="mainApp" style="display:none">
+<div class="header"><div class="logo">PAC <b style="color:#fe2c55">App</b> <span style="font-size:9px;background:#22c55e;color:#000;padding:2px 6px;border-radius:100px">● LOGGED IN</span></div><div style="display:flex;gap:12px;align-items:center"><span id="userDisplay" style="font-size:11px;font-weight:700">@guest</span><i class="fa-solid fa-right-from-bracket" onclick="logout()" style="cursor:pointer"></i></div></div>
+<div id="feed" class="feed"></div>
+<div class="bottom"><div class="nav active"><i class="fa-solid fa-house"></i>Home</div><div class="nav"><i class="fa-solid fa-compass"></i>Discover</div><div class="nav" style="width:40px;height:26px;background:#fe2c55;border-radius:6px;display:flex;align-items:center;justify-content:center;color:#fff">+</div><div class="nav"><i class="fa-solid fa-inbox"></i>Inbox</div><div class="nav"><i class="fa-solid fa-user"></i>Profile</div></div>
+</div>
+
+<script>
+let currentUser = JSON.parse(localStorage.getItem('pac_user')) || null;
+
+const POOL=[
+{url:'https://www.w3schools.com/html/mov_bbb.mp4',user:'@pac_ug',desc:'Welcome to PAC App! Login like TikTok ✅ #FYP #PACApp'},
+{url:'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',user:'@makerere',desc:'Makerere vibes after login 🔥 #Makerere'},
+{url:'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',user:'@mubs',desc:'Logged in! Now you can like & comment #MUBS'},
+];
+
+let videos = POOL;
+
+function render(){
+ document.getElementById('feed').innerHTML=videos.map((v,i)=>`
+ <div class="v-card"><video src="${v.url}" loop autoplay muted playsinline onclick="this.muted=!this.muted"></video><div class="overlay"></div>
+ <div class="right"><div class="act"><img src="https://i.pravatar.cc/100?img=${i+1}" style="width:42px;height:42px;border-radius:100%;border:2px solid #fff"><br>+</div><div class="act"><i class="fa-solid fa-heart"></i>24.6K</div><div class="act"><i class="fa-solid fa-comment-dots"></i>312</div><div class="act"><i class="fa-solid fa-bookmark"></i>Save</div><div class="act"><i class
