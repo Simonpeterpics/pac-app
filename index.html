@@ -4,14 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>PAC</title>
-<link rel="manifest" href="manifest.json">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:#000;color:#fff;font-family:system-ui;overflow:hidden;height:100vh;width:100vw}
 #feed{height:100vh;width:100vw;overflow-y:scroll;scroll-snap-type:y mandatory;scrollbar-width:none;padding-bottom:70px}
 #feed::-webkit-scrollbar{display:none}
 .post{position:relative;height:100vh;width:100vw;scroll-snap-align:start;background:#000;display:flex;align-items:center;justify-content:center}
-.post video{height:100%;width:100%;object-fit:cover;background:#111}
+.post video{height:100%;width:100%;object-fit:cover;background:#000}
 .top{position:absolute;top:0;left:0;right:0;z-index:10;padding:8px 10px;background:linear-gradient(to bottom,rgba(0,0,0,.8),transparent)}
 .top-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
 .logo{font-weight:900;font-size:17px}.logo span{color:#e11d48}
@@ -26,27 +25,20 @@ body{background:#000;color:#fff;font-family:system-ui;overflow:hidden;height:100
 .cats::-webkit-scrollbar{display:none}
 .cat{padding:4px 9px;border-radius:20px;background:rgba(255,255,255,.15);border:none;color:#fff;font-size:10px;white-space:nowrap}
 .cat.active{background:#fff;color:#000;font-weight:700}
-.sound{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:15;width:70px;height:70px;border-radius:50%;background:rgba(0,0,0,.7);border:2px solid #fff;color:#fff;font-size:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
-.sound span{font-size:9px}
-.playHint{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:5;font-size:60px;opacity:.6;pointer-events:none}
-.bar{position:absolute;bottom:70px;left:0;height:2px;background:#e11d48;width:0%;z-index:11}
-.badge{position:absolute;left:10px;top:100px;z-index:10;background:rgba(0,0,0,.6);padding:2px 7px;border-radius:12px;font-size:9px}
-.badge.liveB{background:#e11d48;top:78px;font-weight:800;display:flex;gap:4px;align-items:center}
-.badge.liveB i{width:6px;height:6px;background:#fff;border-radius:50%;display:inline-block;animation:blink 1s infinite}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.centerBtn{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:15;width:80px;height:80px;border-radius:50%;background:rgba(0,0,0,.6);border:2px solid #fff;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.centerBtn b{font-size:22px}
+.centerBtn span{font-size:9px;font-weight:700;margin-top:2px}
+.bar{position:absolute;bottom:70px;left:0;height:3px;background:#e11d48;width:0%;z-index:11}
+.badge{position:absolute;left:10px;top:100px;z-index:10;background:rgba(0,0,0,.6);padding:3px 8px;border-radius:12px;font-size:9px}
 .info{position:absolute;bottom:82px;left:10px;right:65px;z-index:10}
 .user{font-weight:700;font-size:12px;margin-bottom:2px;display:flex;gap:5px;align-items:center}
 .user button{background:#e11d48;border:none;color:#fff;padding:2px 7px;border-radius:10px;font-size:9px}
 .cap{font-size:11px;opacity:.9;line-height:1.25}
 .actions{position:absolute;right:5px;bottom:125px;z-index:10;display:flex;flex-direction:column;gap:13px;align-items:center}
-.act{cursor:pointer;text-align:center}
-.act-btn{width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.15);border:none;color:#fff;font-size:18px}
-.act-btn.liked{background:#e11d48}
-.count{font-size:9px;font-weight:600;display:block;margin-top:2px}
+.act-btn{width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,.15);border:none;color:#fff;font-size:18px}
 #bottom{position:fixed;bottom:0;left:0;right:0;z-index:50;background:rgba(0,0,0,.95);border-top:1px solid #222;display:flex;justify-content:space-around;padding:6px 0 10px}
 .b-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:1px;cursor:pointer;opacity:.5}
 .b-item.active{opacity:1}
-.b-item i{font-size:18px}
 .b-item span{font-size:8px;font-weight:600}
 #uploadBox,#liveBox{position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.92);display:none;align-items:center;justify-content:center;padding:14px}
 #uploadBox.open,#liveBox.open{display:flex}
@@ -63,93 +55,95 @@ body{background:#000;color:#fff;font-family:system-ui;overflow:hidden;height:100
 <body>
 <div id="feed"></div>
 <div id="bottom">
-<div class="b-item active" onclick="switchPage('foryou',this)"><i>🏠</i><span>For You</span></div>
-<div class="b-item" onclick="switchPage('followers',this)"><i>👥</i><span>Followers</span></div>
-<div class="b-item" onclick="switchPage('live',this)"><i>🔴</i><span>Live</span></div>
-<div class="b-item" onclick="switchPage('study',this)"><i>📚</i><span>Study</span></div>
+<div class="b-item active" onclick="switchPage('foryou',this)"><span>🏠</span><span>For You</span></div>
+<div class="b-item" onclick="switchPage('followers',this)"><span>👥</span><span>Followers</span></div>
+<div class="b-item" onclick="switchPage('live',this)"><span>🔴</span><span>Live</span></div>
+<div class="b-item" onclick="switchPage('study',this)"><span>📚</span><span>Study</span></div>
 </div>
-<div id="uploadBox"><div class="card"><h3>Upload Unlimited 🎬</h3><input type="file" id="vidFile" accept="video/*"><input id="uName" placeholder="@yourname"><select id="uType"><option value="funny">😂 Funny</option><option value="comedy">🤣 Comedy</option><option value="dance">💃 Dance</option><option value="music">🎵 Music</option><option value="edu">📚 Study</option></select><textarea id="uCap" placeholder="Write caption..."></textarea><button class="p" onclick="doUpload()">Upload!</button><button class="s" onclick="closeUpload()">Cancel</button></div></div>
+<div id="uploadBox"><div class="card"><h3>Upload Unlimited 🎬</h3><input type="file" id="vidFile" accept="video/*"><input id="uName" placeholder="@yourname"><select id="uType"><option value="funny">😂 Funny</option><option value="comedy">🤣 Comedy</option><option value="edu">📚 Study</option></select><textarea id="uCap" placeholder="Write caption..."></textarea><button class="p" onclick="doUpload()">Upload!</button><button class="s" onclick="closeUpload()">Cancel</button></div></div>
 <div id="liveBox"><div class="card"><h3>🔴 Go LIVE</h3><video id="livePrev" autoplay muted playsinline></video><input id="liveName" placeholder="@yourname"><input id="liveTitle" placeholder="Live title..."><button class="p" id="sBtn" onclick="startLive()">Start LIVE</button><button class="p" id="eBtn" onclick="endLive()" style="display:none;background:#333">End LIVE</button><button class="s" onclick="closeLive()">Close</button></div></div>
 <div id="toast"></div>
-
 <script>
 let baseVideos=[
-{src:"https://www.w3schools.com/html/mov_bbb.mp4",user:"@funny_ug",cap:"When you try to cook but it cooks you 😂 #Funny",type:"funny",likes:8932,edu:false},
-{src:"https://test-videos.co.uk/vids/sintel/mp4/h264/720/Big_Buck_Bunny_720_10s_1MB.mp4",user:"@comedy_king",cap:"Boda says 'I know shortcut' 🤣💀",type:"comedy",likes:12453,edu:false},
-{src:"https://www.w3schools.com/html/movie.mp4",user:"@pac_dance",cap:"Dance challenge 😂💃 Try this!",type:"dance",likes:5421,edu:false},
-{src:"https://test-videos.co.uk/vids/jellyfish/mp4/h264/720/Jellyfish_720_10s_1MB.mp4",user:"@kampala_joker",cap:"Ugandan parents be like 😭😂 #Funny",type:"funny",likes:15672,edu:false},
-{src:"https://test-videos.co.uk/vids/sintel/mp4/h264/720/Sintel_720_10s_1MB.mp4",user:"@edu_ug",cap:"How to make Rolex in 30s! 📚 Learn",type:"edu",likes:3211,edu:true},
-{src:"https://test-videos.co.uk/vids/bigbuckbunny/mp4/h264/720/Big_Buck_Bunny_720_10s_1MB.mp4",user:"@study_ug",cap:"English mistakes we all make 📚😂",type:"edu",likes:7654,edu:true}
+{src:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",user:"@funny_ug",cap:"When you try to cook but it cooks you 😂 #Funny",type:"funny",likes:"8.9K",edu:false},
+{src:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",user:"@comedy_king",cap:"Boda says 'I know shortcut' 🤣💀",type:"comedy",likes:"12K",edu:false},
+{src:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",user:"@pac_dance",cap:"Dance challenge 😂💃",type:"funny",likes:"5.4K",edu:false},
+{src:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",user:"@kampala_joker",cap:"Ugandan parents be like 😭😂",type:"funny",likes:"15K",edu:false},
+{src:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4",user:"@edu_ug",cap:"How to make Rolex 30s! 📚 Learn cooking",type:"edu",likes:"3.2K",edu:true},
+{src:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4",user:"@study_ug",cap:"English funny mistakes we make 😂📚",type:"edu",likes:"7.6K",edu:true}
 ];
-
-let data=baseVideos.map(v=>({...v,comments:0,shares:0,liked:false,isLive:false,viewers:0}));
+let data=baseVideos.map(v=>({...v,liked:false,isLive:false,viewers:0}));
 let followedUsers=new Set();
-let currentPage='foryou', currentFilter='all', feed=document.getElementById('feed'), liveStream=null, isLiveNow=false, soundOn=false;
+let currentPage='foryou',currentFilter='all',feed=document.getElementById('feed'),liveStream=null,isLiveNow=false,soundOn=false;
 
-function fmt(n){return n>=1000?(n/1000).toFixed(1)+'K':n}
 function getList(){
 if(currentPage==='foryou') return currentFilter==='all'? data : data.filter(v=>v.type===currentFilter);
 if(currentPage==='followers') return data.filter(v=>followedUsers.has(v.user));
 if(currentPage==='live') return data.filter(v=>v.isLive);
-if(currentPage==='study') return data.filter(v=>v.edu||v.type==='edu');
+if(currentPage==='study') return data.filter(v=>v.edu);
 return data;
 }
 function makeTabs(){return `<div class="tabs"><div class="tab ${currentPage==='foryou'?'active':''}" onclick="switchPage('foryou')">For You</div><div class="tab ${currentPage==='followers'?'active':''}" onclick="switchPage('followers')">Followers</div><div class="tab ${currentPage==='live'?'active':''}" onclick="switchPage('live')">🔴 Live</div><div class="tab ${currentPage==='study'?'active':''}" onclick="switchPage('study')">Study</div></div>`}
 function makeCats(){if(currentPage!=='foryou') return ''; return `<div class="cats"><button class="cat ${currentFilter==='all'?'active':''}" onclick="setFilter('all')">All</button><button class="cat ${currentFilter==='funny'?'active':''}" onclick="setFilter('funny')">😂 Funny</button><button class="cat ${currentFilter==='edu'?'active':''}" onclick="setFilter('edu')">📚 Study</button></div>`}
 
 function makePost(p,i){
-let emoji={funny:'😂',comedy:'🤣',dance:'💃',music:'🎵',edu:'📚'}[p.type]||'🎬';
-let liveHtml=p.isLive?`<div class="badge liveB"><i></i> LIVE</div>`:`<div class="badge">${emoji} ${p.type}</div>`;
+let emoji={funny:'😂',comedy:'🤣',edu:'📚'}[p.type]||'🎬';
 let d=document.createElement('div'); d.className='post';
-d.innerHTML=`<video src="${p.isLive?'':p.src}" loop playsinline muted preload="auto" crossorigin="anonymous"></video>
-<div class="playHint">▶️</div>
-<button class="sound" onclick="toggleSound(this)"><div>🔊</div><span>TAP FOR SOUND</span></button>
+d.innerHTML=`<video src="${p.src}" loop playsinline muted autoplay preload="auto"></video>
+<div class="centerBtn" onclick="toggleSound(this)"><b>${soundOn?'🔊':'🔇'}</b><span>${soundOn?'SOUND ON':'TAP FOR SOUND'}</span></div>
 <div class="top"><div class="top-row"><div class="logo">PAC<span>.</span> • ${data.length} videos</div><div class="top-btns"><button class="t-btn liveBtn" onclick="openLive()">🔴 LIVE</button><button class="t-btn plusBtn" onclick="openUpload()">+</button></div></div>${makeTabs()}${makeCats()}</div>
 <div class="bar"></div>
+<div class="badge">${emoji} ${p.type}</div>
 <div class="info"><div class="user">${p.user} ${followedUsers.has(p.user)?'':`<button onclick="follow('${p.user}',event)">+ Follow</button>`}</div><div class="cap">${p.cap}</div></div>
-<div class="actions"><div class="act" onclick="like(${i},this)"><button class="act-btn ${p.liked?'liked':''}">${p.liked?'❤️':'🤍'}</button><span class="count">${fmt(p.likes)}</span></div></div>
-${liveHtml}`;
+<div class="actions"><div onclick="like(${i},this)"><button class="act-btn">🤍</button><div style="font-size:9px;margin-top:2px">${p.likes}</div></div></div>`;
 let vid=d.querySelector('video');
-vid.addEventListener('error',()=>{ console.log('video error',p.src); d.querySelector('.playHint').textContent='⚠️ Tap to retry'; });
-d.addEventListener('click',(e)=>{
-if(e.target.closest('button')||e.target.closest('.top')||e.target.closest('.actions')) return;
-if(vid.paused) vid.play(); else vid.pause();
+let btn=d.querySelector('.centerBtn');
+vid.addEventListener('playing',()=>{ btn.style.display='none'; });
+vid.addEventListener('pause',()=>{ btn.style.display='flex'; });
+vid.addEventListener('error',()=>{
+console.log('Error loading',p.src);
+btn.innerHTML='<b>⚠️</b><span>TAP TO RETRY</span>';
+btn.style.display='flex';
+btn.onclick=()=>{ vid.load(); vid.play(); btn.style.display='none'; };
 });
-if(p.isLive && p.stream){setTimeout(()=>{vid.srcObject=p.stream; vid.muted=true; vid.play()},100)}
+d.addEventListener('click',(e)=>{
+if(e.target.closest('button')||e.target.closest('.top')||e.target.closest('.actions')||e.target.closest('.centerBtn')) return;
+if(vid.paused){ vid.play(); } else { vid.pause(); }
+});
 return d;
 }
-
 function render(){
 feed.innerHTML='';
 let list=getList();
-if(list.length===0){feed.innerHTML=`<div style="height:100vh;display:flex;align-items:center;justify-content:center;padding-bottom:80px">No videos in ${currentPage}</div>`; return;}
+if(list.length===0){feed.innerHTML=`<div style="height:100vh;display:flex;align-items:center;justify-content:center">No videos in ${currentPage}</div>`; return;}
 list.forEach(p=>{let idx=data.indexOf(p); feed.appendChild(makePost(p,idx));});
-setTimeout(()=>observe(),100);
+setTimeout(observe,200);
 }
 function observe(){
 let io=new IntersectionObserver(es=>{
 es.forEach(e=>{
 if(e.isIntersecting){
 let v=e.target.querySelector('video');
-if(!v||!v.src) return;
-document.querySelectorAll('video').forEach(x=>{if(x!==v && x.src) {x.pause(); let h=x.parentElement.querySelector('.playHint'); if(h) h.style.display='block'}});
-v.play().then(()=>{ let h=e.target.querySelector('.playHint'); if(h) h.style.display='none'; }).catch(()=>{});
-if(soundOn){ v.muted=false; }
+if(!v) return;
+document.querySelectorAll('video').forEach(x=>{if(x!==v){x.pause();}});
+v.muted=!soundOn?true:false;
+v.play().catch(()=>{ v.muted=true; v.play(); });
 let b=e.target.querySelector('.bar');
-v.ontimeupdate=()=>{ if(v.duration) b.style.width=v.currentTime/v.duration*100+'%' };
+v.ontimeupdate=()=>{if(v.duration) b.style.width=v.currentTime/v.duration*100+'%'};
 }
 });
 },{threshold:0.6});
 document.querySelectorAll('.post').forEach(p=>io.observe(p));
-let first=document.querySelector('.post video');
-if(first){ first.play().catch(()=>{}); }
 }
 function toggleSound(btn){
 let vid=btn.parentElement.querySelector('video');
 soundOn=!soundOn;
-if(soundOn){ document.querySelectorAll('video').forEach(v=>v.muted=false); btn.innerHTML='<div>🔊</div><span>SOUND ON</span>'; toast('Sound ON 🔊'); }
-else{ document.querySelectorAll('video').forEach(v=>v.muted=true); btn.innerHTML='<div>🔇</div><span>TAP FOR SOUND</span>'; toast('Sound OFF 🔇'); }
-if(vid.paused) vid.play();
+document.querySelectorAll('video').forEach(v=>{
+v.muted=!soundOn;
+if(!v.paused) v.play();
+});
+if(soundOn){ btn.innerHTML='<b>🔊</b><span>SOUND ON</span>'; toast('Sound ON 🔊'); setTimeout(()=>btn.style.display='none',1000); }
+else{ btn.innerHTML='<b>🔇</b><span>TAP FOR SOUND</span>'; }
 }
 function switchPage(page,el){
 currentPage=page;
@@ -158,7 +152,7 @@ render();
 }
 function setFilter(t){currentFilter=t; render();}
 function follow(user,e){e.stopPropagation(); followedUsers.add(user); toast('Followed '+user); render();}
-function like(i,el){let p=data[i]; let b=el.querySelector('.act-btn'); if(!p.liked){p.liked=true;p.likes++;b.classList.add('liked');b.textContent='❤️'}else{p.liked=false;p.likes--;b.classList.remove('liked');b.textContent='🤍'}}
+function like(i,el){let p=data[i]; p.liked=!p.liked; el.querySelector('.act-btn').textContent=p.liked?'❤️':'🤍'; toast(p.liked?'Liked ❤️':'Unliked');}
 
 function openUpload(){document.getElementById('uploadBox').classList.add('open')}
 function closeUpload(){document.getElementById('uploadBox').classList.remove('open')}
@@ -169,21 +163,21 @@ let type=document.getElementById('uType').value;
 let cap=document.getElementById('uCap').value||'';
 if(!f){toast('Pick video!'); return}
 let url=URL.createObjectURL(f);
-data.unshift({src:url,user:name,cap:cap,type:type,likes:0,comments:0,shares:0,liked:false,isLive:false,edu:type==='edu'});
-render(); closeUpload(); toast('Uploaded! Total '+data.length+' ♾️'); feed.scrollTop=0;
+data.unshift({src:url,user:name,cap:cap,type:type,likes:'0',liked:false,isLive:false,edu:type==='edu'});
+render(); closeUpload(); toast('Uploaded ♾️ Total '+data.length); feed.scrollTop=0;
 }
 async function openLive(){
 document.getElementById('liveBox').classList.add('open');
 try{let s=await navigator.mediaDevices.getUserMedia({video:true,audio:true}); liveStream=s; document.getElementById('livePrev').srcObject=s;}catch{toast('Need camera!')}
 }
-function closeLive(){document.getElementById('liveBox').classList.remove('open'); if(!isLiveNow && liveStream){liveStream.getTracks().forEach(t=>t.stop()); liveStream=null;}}
+function closeLive(){document.getElementById('liveBox').classList.remove('open'); if(!isLiveNow && liveStream){liveStream.getTracks().forEach(t=>t.stop());}}
 function startLive(){
 if(!liveStream){toast('Allow camera!'); return}
 let name=document.getElementById('liveName').value||'@you';
 let title=document.getElementById('liveTitle').value||'Live!';
 isLiveNow=true;
-data.unshift({src:'',user:name,cap:title,type:'live',likes:0,comments:0,shares:0,liked:false,isLive:true,viewers:42,stream:liveStream,edu:false});
-render(); document.getElementById('liveBox').classList.remove('open'); document.getElementById('sBtn').style.display='none'; document.getElementById('eBtn').style.display='block'; feed.scrollTop=0;
+data.unshift({src:'',user:name,cap:title,type:'live',likes:'0',liked:false,isLive:true,viewers:42,stream:liveStream,edu:false});
+render(); document.getElementById('liveBox').classList.remove('open'); document.getElementById('sBtn').style.display='none'; document.getElementById('eBtn').style.display='block';
 }
 function endLive(){
 isLiveNow=false;
@@ -193,17 +187,12 @@ document.getElementById('sBtn').style.display='block'; document.getElementById('
 }
 function toast(m){let t=document.getElementById('toast'); t.textContent=m; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2000)}
 
-// Enable sound on first tap anywhere
-document.body.addEventListener('click',()=>{ if(!soundOn){ /* keep muted until button */ } },{once:true});
-
 render();
-
-// Auto infinite scroll - unlimited
 feed.addEventListener('scroll',()=>{
-if(feed.scrollTop+feed.clientHeight >= feed.scrollHeight-300 && currentPage==='foryou'){
+if(feed.scrollTop+feed.clientHeight >= feed.scrollHeight-300 && currentPage==='foryou' && currentFilter==='all'){
 for(let k=0;k<2;k++){
 let r=baseVideos[Math.floor(Math.random()*baseVideos.length)];
-data.push({...r,likes:Math.floor(Math.random()*5000),comments:0,shares:0,liked:false,isLive:false});
+data.push({...r,likes:Math.floor(Math.random()*10000)+'K'});
 }
 render();
 }
