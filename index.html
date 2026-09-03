@@ -2,98 +2,230 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>PAC App</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>PAC</title>
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#fe2c55">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:system-ui}
-body{background:#000;color:#fff;height:100dvh;overflow:hidden}
-/* LOGIN WHITE LIKE TIKTOK */
-.login{position:fixed;inset:0;z-index:100;background:#fff;color:#000;display:flex;flex-direction:column}
-.login.hidden{display:none}
-.login-title{font-size:22px;font-weight:900;text-align:center;padding:20px}
-.login-sub{font-size:14px;color:#666;text-align:center;padding:0 20px 20px}
-.tiktok-btn{width:90%;margin:0 auto 12px;border:1px solid #ddd;border-radius:4px;padding:13px;display:flex;align-items:center;gap:12px;font-weight:700;background:#fff;color:#000;cursor:pointer}
-.tiktok-btn.primary{background:#fe2c55;color:#fff;border-color:#fe2c55}
-.or{display:flex;align-items:center;gap:10px;padding:15px;color:#999;font-size:12px;width:90%;margin:0 auto}
-.or::before,.or::after{content:'';flex:1;height:1px;background:#eee}
-.signup{margin-top:auto;padding:20px;text-align:center;border-top:1px solid #eee;background:#fafafa}
-.signup b{color:#fe2c55}
-/* MAIN APP BLACK RED */
-.header{position:fixed;top:0;left:0;right:0;z-index:20;display:flex;justify-content:space-between;padding:10px;background:linear-gradient(to bottom,black,transparent)}
-.logo{font-weight:900}
-.logo span{color:#fe2c55}
-.feed{height:100dvh;overflow-y:scroll;scroll-snap-type:y mandatory}
-.v-card{height:100dvh;scroll-snap-align:start;position:relative}
-.v-card video{width:100%;height:100%;object-fit:cover}
-.overlay{position:absolute;inset:0;background:linear-gradient(to top,black,transparent 40%)}
-.right{position:absolute;right:8px;bottom:110px;display:flex;flex-direction:column;gap:15px;text-align:center}
-.act i{width:44px;height:44px;background:rgba(255,255,255,0.15);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px}
-.left{position:absolute;left:10px;bottom:90px;right:70px}
-.bottom{position:fixed;bottom:0;left:0;right:0;background:black;border-top:1px solid #222;display:flex;justify-content:space-around;padding:8px 0 15px}
-.nav{color:#555;font-size:9px;font-weight:700;text-align:center}
-.nav.active{color:white}
-.nav i{font-size:18px;display:block}
-.modal{position:fixed;inset:0;z-index:200;background:white;color:black;display:none;flex-direction:column}
-.modal.show{display:flex}
-.input{width:100%;padding:14px;border:1px solid #ddd;background:#f5f5f5;margin-bottom:10px}
-.btn{width:100%;padding:14px;background:#fe2c55;color:white;border:none;font-weight:800}
-.status{position:fixed;top:50px;left:50%;transform:translateX(-50%);background:#fe2c55;padding:6px 14px;border-radius:20px;font-size:11px;font-weight:800;display:none;z-index:30}
-.status.show{display:block}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#000;color:#fff;font-family:system-ui;overflow:hidden;height:100vh;width:100vw}
+#feed{height:100vh;width:100vw;overflow-y:scroll;scroll-snap-type:y mandatory;scrollbar-width:none;padding-bottom:70px}
+#feed::-webkit-scrollbar{display:none}
+.post{position:relative;height:100vh;width:100vw;scroll-snap-align:start;background:#000;display:flex;align-items:center;justify-content:center}
+.post video{height:100%;width:100%;object-fit:cover}
+.top{position:absolute;top:0;left:0;right:0;z-index:10;padding:8px 10px;background:linear-gradient(to bottom,rgba(0,0,0,.75),transparent)}
+.top-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
+.logo{font-weight:900;font-size:17px}.logo span{color:#e11d48}
+.countAll{font-size:10px;opacity:.7}
+.top-btns{display:flex;gap:5px}
+.t-btn{padding:5px 9px;border-radius:20px;border:none;font-weight:700;font-size:11px;cursor:pointer}
+.liveBtn{background:#e11d48;color:#fff}
+.plusBtn{background:#fff;color:#000;width:30px;height:30px;border-radius:50%;font-size:16px}
+.tabs{display:flex;gap:12px;justify-content:center;margin-bottom:4px}
+.tab{font-size:12px;font-weight:600;opacity:.5;cursor:pointer;padding-bottom:2px;border-bottom:2px solid transparent}
+.tab.active{opacity:1;border-bottom:2px solid #fff}
+.cats{display:flex;gap:5px;overflow-x:auto;scrollbar-width:none}
+.cats::-webkit-scrollbar{display:none}
+.cat{padding:4px 9px;border-radius:20px;background:rgba(255,255,255,.15);border:none;color:#fff;font-size:10px;white-space:nowrap;cursor:pointer}
+.cat.active{background:#fff;color:#000;font-weight:700}
+.sound{position:absolute;left:10px;top:50%;transform:translateY(-50%);z-index:10;width:32px;height:32px;border-radius:50%;background:rgba(0,0,0,.6);border:none;color:#fff}
+.bar{position:absolute;bottom:70px;left:0;height:2px;background:#e11d48;width:0%;z-index:11}
+.badge{position:absolute;left:10px;top:102px;z-index:10;background:rgba(0,0,0,.6);padding:2px 7px;border-radius:12px;font-size:9px}
+.badge.liveB{background:#e11d48;top:80px;font-weight:800;display:flex;gap:4px;align-items:center}
+.badge.liveB i{width:6px;height:6px;background:#fff;border-radius:50%;display:inline-block;animation:blink 1s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.info{position:absolute;bottom:82px;left:10px;right:65px;z-index:10}
+.user{font-weight:700;font-size:12px;margin-bottom:2px;display:flex;gap:5px;align-items:center}
+.user button{background:#e11d48;border:none;color:#fff;padding:2px 7px;border-radius:10px;font-size:9px;font-weight:700}
+.cap{font-size:11px;opacity:.9;line-height:1.25}
+.actions{position:absolute;right:5px;bottom:125px;z-index:10;display:flex;flex-direction:column;gap:13px;align-items:center}
+.act{cursor:pointer;text-align:center}
+.act-btn{width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.15);backdrop-filter:blur(10px);border:none;color:#fff;font-size:18px}
+.act-btn.liked{background:#e11d48}
+.count{font-size:9px;font-weight:600;display:block;margin-top:2px}
+#bottom{position:fixed;bottom:0;left:0;right:0;z-index:50;background:rgba(0,0,0,.95);border-top:1px solid #222;display:flex;justify-content:space-around;padding:6px 0 10px}
+.b-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:1px;cursor:pointer;opacity:.5}
+.b-item.active{opacity:1}
+.b-item i{font-size:18px}
+.b-item span{font-size:8px;font-weight:600}
+#uploadBox,#liveBox{position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.92);display:none;align-items:center;justify-content:center;padding:14px}
+#uploadBox.open,#liveBox.open{display:flex}
+.card{background:#1a1a1a;width:100%;max-width:330px;border-radius:16px;padding:14px}
+.card h3{margin-bottom:8px;font-size:14px}
+.card input,.card select,.card textarea{width:100%;background:#222;border:1px solid #333;border-radius:10px;padding:9px;color:#fff;margin-bottom:7px;outline:none;font-size:12px}
+.card button{width:100%;padding:10px;border-radius:10px;border:none;font-weight:700;cursor:pointer;font-size:12px}
+.p{background:#e11d48;color:#fff;margin-bottom:6px}
+.s{background:#222;color:#fff}
+#livePrev{width:100%;height:190px;background:#000;border-radius:12px;object-fit:cover;margin-bottom:8px}
+#toast{position:fixed;left:50%;bottom:85px;transform:translateX(-50%);background:#fff;color:#000;padding:7px 12px;border-radius:20px;font-size:11px;font-weight:700;opacity:0;transition:.3s;z-index:200;pointer-events:none}
+#toast.show{opacity:1}
+#comments{position:fixed;bottom:68px;left:0;right:0;z-index:60;background:#121212;border-radius:14px 14px 0 0;max-height:55vh;transform:translateY(110%);transition:.35s;display:flex;flex-direction:column}
+#comments.open{transform:translateY(0)}
+.c-head{padding:8px 12px;display:flex;justify-content:space-between;border-bottom:1px solid #222;font-weight:700;font-size:11px}
+.c-list{flex:1;overflow-y:auto;padding:8px 12px;display:flex;flex-direction:column;gap:7px;font-size:11px}
+.c-in{padding:8px;border-top:1px solid #222;display:flex;gap:6px}
+.c-in input{flex:1;background:#222;border:none;border-radius:20px;padding:7px 11px;color:#fff;font-size:11px}
+.c-in button{background:#e11d48;border:none;color:#fff;width:30px;height:30px;border-radius:50%}
 </style>
 </head>
 <body>
-
-<!-- LOGIN SCREEN -->
-<div id="loginScreen" class="login">
-  <div style="padding:14px;display:flex;justify-content:space-between"><i class="fa-solid fa-xmark" onclick="continueAsGuest()"></i><i class="fa-solid fa-circle-question"></i></div>
-  <div class="login-title">Log in to PAC App</div>
-  <div class="login-sub">TikTok for Campus - Logo #1 Glitch Shield Red</div>
-  <button class="tiktok-btn" onclick="openPhone()"><i class="fa-solid fa-user"></i> Use phone / email / username</button>
-  <button class="tiktok-btn" onclick="socialLogin('Facebook')"><i class="fa-brands fa-facebook" style="color:blue"></i> Continue with Facebook</button>
-  <button class="tiktok-btn" onclick="socialLogin('Google')"><i class="fa-brands fa-google" style="color:red"></i> Continue with Google</button>
-  <div class="or">OR</div>
-  <button class="tiktok-btn" onclick="continueAsGuest()" style="width:90%;margin:0 auto"><i class="fa-solid fa-user-secret"></i> Continue as guest</button>
-  <div class="signup">Don't have account? <b>Sign up</b></div>
+<div id="feed"></div>
+<div id="bottom">
+<div class="b-item active" onclick="switchPage('foryou',this)"><i>🏠</i><span>For You</span></div>
+<div class="b-item" onclick="switchPage('followers',this)"><i>👥</i><span>Followers</span></div>
+<div class="b-item" onclick="switchPage('live',this)"><i>🔴</i><span>Live</span></div>
+<div class="b-item" onclick="switchPage('study',this)"><i>📚</i><span>Study</span></div>
 </div>
-
-<!-- PHONE LOGIN -->
-<div id="phoneModal" class="modal">
-  <div style="padding:14px;border-bottom:1px solid #eee"><i class="fa-solid fa-arrow-left" onclick="closePhone()"></i> <span style="margin-left:40px;font-weight:700">Log in</span></div>
-  <div style="padding:20px"><input id="phoneInput" placeholder="Phone UG +256" class="input"><input id="passInput" type="password" placeholder="Password" class="input"><button id="loginBtn" class="btn" disabled onclick="doLogin()">Log in</button></div>
-</div>
-
-<!-- MAIN APP -->
-<div id="mainApp" style="display:none">
-  <div class="header"><div class="logo">PAC <span>App</span> 🔴 Logo #1</div><div id="userDisplay" style="font-size:11px">@guest</div></div>
-  <div id="status" class="status"></div>
-  <div id="feed" class="feed"></div>
-  <div class="bottom"><div class="nav active"><i class="fa-solid fa-house"></i>Home</div><div class="nav"><i class="fa-solid fa-compass"></i>Discover</div><div class="nav" style="background:#fe2c55;color:white;width:40px;height:26px;border-radius:6px;display:flex;align-items:center;justify-content:center">+</div><div class="nav"><i class="fa-solid fa-inbox"></i>Inbox</div><div class="nav" onclick="logout()"><i class="fa-solid fa-user"></i>Profile</div></div>
-</div>
-
+<div id="uploadBox"><div class="card"><h3>Upload Unlimited 🎬</h3><input type="file" id="vidFile" accept="video/*"><input id="uName" placeholder="@yourname"><select id="uType"><option value="funny">😂 Funny</option><option value="comedy">🤣 Comedy</option><option value="dance">💃 Dance</option><option value="music">🎵 Music</option><option value="edu">📚 Study</option><option value="lifestyle">❤️ Life</option></select><textarea id="uCap" placeholder="Write caption... unlimited!"></textarea><button class="p" onclick="doUpload()">Upload - Unlimited!</button><button class="s" onclick="closeUpload()">Cancel</button><p style="font-size:9px;opacity:.5;margin-top:6px;text-align:center">You can upload 1000+ videos! No limit!</p></div></div>
+<div id="liveBox"><div class="card"><h3>🔴 Go LIVE</h3><video id="livePrev" autoplay muted playsinline></video><input id="liveName" placeholder="@yourname"><input id="liveTitle" placeholder="Live title..."><button class="p" id="sBtn" onclick="startLive()">Start LIVE</button><button class="p" id="eBtn" onclick="endLive()" style="display:none;background:#333">End LIVE</button><button class="s" onclick="closeLive()">Close</button></div></div>
+<div id="comments"><div style="width:32px;height:3px;background:#333;border-radius:10px;margin:6px auto"></div><div class="c-head"><span id="c-num">0</span><span onclick="closeC()">✕</span></div><div class="c-list" id="c-list"></div><div class="c-in"><input id="c-inp" placeholder="Add comment..."><button onclick="addC()">↑</button></div></div>
+<div id="toast"></div>
 <script>
-let currentUser=JSON.parse(localStorage.getItem('pac_user'))||null;
-const POOL=[
-{url:'https://www.w3schools.com/html/mov_bbb.mp4',user:'@pacstudentlife',desc:'Welcome PAC App Red Logo #1 Glitch Shield 🔥 #FYP'},
-{url:'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',user:'@makerere',desc:'Makerere FREE streaming #Makerere'},
-{url:'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',user:'@mubs',desc:'MUBS life #MUBS'},
+let baseVideos=[
+{src:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",user:"@funny_ug",cap:"When you try to cook but it cooks you 😂",type:"funny",likes:8932,edu:false},
+{src:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",user:"@comedy_king",cap:"Boda says 'shortcut' 🤣",type:"comedy",likes:12453,edu:false},
+{src:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",user:"@pac_dance",cap:"Dance challenge 😂💃",type:"dance",likes:5421,edu:false},
+{src:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",user:"@kampala_joker",cap:"Ugandan parents 😭😂",type:"funny",likes:15672,edu:false},
+{src:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",user:"@afro_comedy",cap:"She says 5 mins away 1hr later 🤣",type:"comedy",likes:9876,edu:false},
+{src:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4",user:"@edu_ug",cap:"How to make Rolex 30s! 📚",type:"edu",likes:3211,edu:true},
+{src:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4",user:"@study_ug",cap:"English funny mistakes 📚😂",type:"edu",likes:7654,edu:true},
+{src:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4",user:"@prankster",cap:"Prank gone wrong 😂",type:"funny",likes:11234,edu:false}
 ];
-let videos=JSON.parse(localStorage.getItem('pac_final'))||POOL;
-function show(t){let e=document.getElementById('status');e.textContent=t;e.classList.add('show');setTimeout(()=>e.classList.remove('show'),2500);}
-function render(){document.getElementById('feed').innerHTML=videos.map((v,i)=>`<div class="v-card"><video src="${v.url}" loop autoplay muted playsinline onclick="this.muted=!this.muted"></video><div class="overlay"></div><div class="right"><div class="act"><img src="https://i.pravatar.cc/100?img=${i+5}" style="width:44px;height:44px;border-radius:50%;border:2px solid white"><br>+</div><div class="act"><i class="fa-solid fa-heart"></i><br>12K</div><div class="act"><i class="fa-solid fa-comment-dots"></i><br>312</div><div class="act"><i class="fa-solid fa-share"></i><br>Share</div></div><div class="left"><div style="font-weight:800">${v.user} ✅</div><div style="font-size:13px;margin-top:4px">${v.desc} • Logo #1 Red</div></div></div>`).join('');}
-function checkLogin(){if(currentUser){document.getElementById('loginScreen').classList.add('hidden');document.getElementById('mainApp').style.display='block';document.getElementById('userDisplay').textContent='@'+currentUser.name;render();}}
-function openPhone(){document.getElementById('phoneModal').classList.add('show');}
-function closePhone(){document.getElementById('phoneModal').classList.remove('show');}
-document.getElementById('phoneInput').addEventListener('input',()=>{document.getElementById('loginBtn').disabled=!(phoneInput.value.length>4&&passInput.value.length>2);});
-document.getElementById('passInput').addEventListener('input',()=>{document.getElementById('loginBtn').disabled=!(phoneInput.value.length>4&&passInput.value.length>2);});
-function doLogin(){let u={name:phoneInput.value.slice(-6)||'pac_user'};localStorage.setItem('pac_user',JSON.stringify(u));currentUser=u;closePhone();checkLogin();show('✅ Logged in @'+u.name);}
-function socialLogin(p){let u={name:p.toLowerCase()+'_123'};localStorage.setItem('pac_user',JSON.stringify(u));currentUser=u;checkLogin();show('✅ Logged with '+p);}
-function continueAsGuest(){let u={name:'guest_'+Math.floor(Math.random()*1000)};localStorage.setItem('pac_user',JSON.stringify(u));currentUser=u;checkLogin();}
-function logout(){localStorage.removeItem('pac_user');location.reload();}
-function autoAdd(){let r=POOL[Math.floor(Math.random()*POOL.length)];if(videos[0].url===r.url)return;videos.unshift(r);if(videos.length>30)videos.pop();localStorage.setItem('pac_final',JSON.stringify(videos));render();show('🤖 AUTO Added '+r.user);}
-checkLogin();render();setInterval(autoAdd,12000);show('🔴 PAC App LIVE - Logo #1 Glitch Red!');
+
+let saved = JSON.parse(localStorage.getItem('pac_uploads')||'[]');
+let data = [...saved.map(s=>({...s, src: s.srcData, isLive:false})),...baseVideos.map(v=>({...v,comments:0,shares:0,liked:false,isLive:false,viewers:0,followed:false}))];
+
+let followedUsers=new Set(JSON.parse(localStorage.getItem('pac_follows')||'[]'));
+let currentPage='foryou', currentFilter='all', feed=document.getElementById('feed'), liveStream=null, isLiveNow=false;
+
+function fmt(n){return n>=1000?(n/1000).toFixed(1)+'K':n}
+function getList(){
+if(currentPage==='foryou') return currentFilter==='all'? data : data.filter(v=>v.type===currentFilter);
+if(currentPage==='followers'){ let f=data.filter(v=>followedUsers.has(v.user)); return f; }
+if(currentPage==='live') return data.filter(v=>v.isLive);
+if(currentPage==='study') return data.filter(v=>v.edu||v.type==='edu');
+return data;
+}
+function makeTabs(){return `<div class="tabs"><div class="tab ${currentPage==='foryou'?'active':''}" onclick="switchPage('foryou',null)">For You</div><div class="tab ${currentPage==='followers'?'active':''}" onclick="switchPage('followers',null)">Followers</div><div class="tab ${currentPage==='live'?'active':''}" onclick="switchPage('live',null)">🔴 Live</div><div class="tab ${currentPage==='study'?'active':''}" onclick="switchPage('study',null)">Study</div></div>`}
+function makeCats(){ if(currentPage!=='foryou') return ''; return `<div class="cats"><button class="cat ${currentFilter==='all'?'active':''}" onclick="setFilter('all')">All (${data.length})</button><button class="cat ${currentFilter==='funny'?'active':''}" onclick="setFilter('funny')">😂 Funny</button><button class="cat ${currentFilter==='comedy'?'active':''}" onclick="setFilter('comedy')">🤣 Comedy</button><button class="cat ${currentFilter==='dance'?'active':''}" onclick="setFilter('dance')">💃 Dance</button><button class="cat ${currentFilter==='edu'?'active':''}" onclick="setFilter('edu')">📚 Study</button></div>`; }
+
+function makePost(p,i){
+let emoji={funny:'😂',comedy:'🤣',dance:'💃',music:'🎵',edu:'📚',lifestyle:'❤️',live:'🔴'}[p.type]||'🎬';
+let liveHtml=p.isLive?`<div class="badge liveB"><i></i> LIVE</div><div class="badge" style="top:98px">👁 ${p.viewers} watching</div>`:`<div class="badge">${emoji} ${p.type} • #${i+1}</div>`;
+let followBtn = followedUsers.has(p.user)? '' : `<button onclick="follow('${p.user}',event)">+ Follow</button>`;
+let d=document.createElement('div'); d.className='post';
+d.innerHTML=`<video src="${p.isLive?'':p.src}" loop playsinline preload="auto" onclick="this.paused?this.play():this.pause()"></video>${liveHtml}
+<div class="top"><div class="top-row"><div><div class="logo">PAC<span>.</span></div><div class="countAll">${data.length} videos • Unlimited!</div></div><div class="top-btns"><button class="t-btn liveBtn" onclick="openLive()">🔴 LIVE</button><button class="t-btn plusBtn" onclick="openUpload()">+</button></div></div>${makeTabs()}${makeCats()}</div>
+<button class="sound" onclick="let v=this.parentElement.querySelector('video'); v.muted=!v.muted; this.textContent=v.muted?'🔇':'🔊'">🔊</button>
+<div class="bar"></div>
+<div class="info"><div class="user">${p.user} ${followBtn}</div><div class="cap">${p.cap}</div></div>
+<div class="actions"><div class="act" onclick="like(${i},this)"><button class="act-btn ${p.liked?'liked':''}">${p.liked?'❤️':'🤍'}</button><span class="count">${fmt(p.likes)}</span></div><div class="act" onclick="openC(${i})"><button class="act-btn">💬</button><span class="count">${fmt(p.comments)}</span></div><div class="act" onclick="share(${i})"><button class="act-btn">↗️</button><span class="count">${fmt(p.shares)}</span></div></div>`;
+if(p.isLive && p.stream){setTimeout(()=>{let v=d.querySelector('video'); if(v){v.srcObject=p.stream; v.muted=true; v.play()}},80)}
+return d;
+}
+function render(){
+feed.innerHTML='';
+let list=getList();
+if(list.length===0){
+let msg=currentPage==='followers'?'No followers yet<br><small>Follow in For You</small>': currentPage==='live'?'No live<br><small>Tap LIVE</small>': currentPage==='study'?'No study videos<br><small>Upload study!</small>':'No videos';
+feed.innerHTML=`<div style="height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding-bottom:80px;text-align:center"><h2>${currentPage}</h2><p style="opacity:.6;font-size:12px">${msg}</p></div>`;
+return;
+}
+list.forEach(p=>{
+let realIdx=data.indexOf(p);
+feed.appendChild(makePost(p,realIdx));
+});
+observe();
+checkInfinite();
+}
+function observe(){
+let io=new IntersectionObserver(es=>{
+es.forEach(e=>{
+if(e.isIntersecting){
+let v=e.target.querySelector('video');
+if(!v||!v.src) return;
+document.querySelectorAll('video').forEach(x=>{if(x!==v && x.src) x.pause()});
+v.muted=false; v.volume=1;
+v.play().catch(()=>{v.muted=true; v.play()});
+let b=e.target.querySelector('.bar');
+v.ontimeupdate=()=>{if(v.duration) b.style.width=v.currentTime/v.duration*100+'%'}
+}
+});
+},{threshold:0.6});
+document.querySelectorAll('.post').forEach(p=>io.observe(p));
+}
+function checkInfinite(){
+feed.onscroll=()=>{
+if(feed.scrollTop+feed.clientHeight >= feed.scrollHeight-400 && currentPage==='foryou' && currentFilter==='all'){
+for(let k=0;k<3;k++){
+let r=baseVideos[Math.floor(Math.random()*baseVideos.length)];
+data.push({...r,cap:r.cap+' • ♾️',likes:Math.floor(Math.random()*5000)+100,comments:0,shares:0,liked:false,isLive:false,edu:r.edu});
+}
+render();
+toast('Loaded 3 more • Unlimited! ♾️ Total: '+data.length);
+}
+};
+}
+function switchPage(page,el){
+currentPage=page;
+if(el){document.querySelectorAll('.b-item').forEach(b=>b.classList.remove('active')); el.classList.add('active');}
+render();
+toast(page==='foryou'?'For You • '+data.length+' videos ♾️': page==='followers'?'Followers 👥 '+followedUsers.size : page==='live'?'Live 🔴' : 'Study 📚');
+}
+function setFilter(t){currentFilter=t; render();}
+function follow(user,e){e.stopPropagation(); followedUsers.add(user); localStorage.setItem('pac_follows',JSON.stringify([...followedUsers])); toast('Followed '+user); render();}
+function like(i,el){let p=data[i]; let b=el.querySelector('.act-btn'); let c=el.querySelector('.count'); if(!p.liked){p.liked=true;p.likes++;b.classList.add('liked');b.textContent='❤️'}else{p.liked=false;p.likes--;b.classList.remove('liked');b.textContent='🤍'} c.textContent=fmt(p.likes)}
+
+let cTarget=0,cStore={};
+function openC(i){cTarget=i; if(!cStore[i])cStore[i]=[]; let l=document.getElementById('c-list'); l.innerHTML=''; cStore[i].forEach(x=>{let d=document.createElement('div'); d.innerHTML=`<b>${x.n}</b> ${x.t}`; l.appendChild(d)}); document.getElementById('c-num').textContent=cStore[i].length+' comments'; document.getElementById('comments').classList.add('open')}
+function closeC(){document.getElementById('comments').classList.remove('open')}
+function addC(){let inp=document.getElementById('c-inp'); let t=inp.value.trim(); if(!t)return; if(!cStore[cTarget])cStore[cTarget]=[]; cStore[cTarget].push({n:'@you',t}); inp.value=''; openC(cTarget); data[cTarget].comments++}
+async function share(i){let url=location.href; if(navigator.share){try{await navigator.share({title:'PAC',url})}catch{}}else{await navigator.clipboard.writeText(url); toast('Link copied!')} data[i].shares++}
+
+function openUpload(){document.getElementById('uploadBox').classList.add('open')}
+function closeUpload(){document.getElementById('uploadBox').classList.remove('open')}
+function doUpload(){
+let f=document.getElementById('vidFile').files[0];
+let name=document.getElementById('uName').value||'@you';
+let type=document.getElementById('uType').value;
+let cap=document.getElementById('uCap').value||'';
+if(!f){toast('Pick video!'); return}
+let url=URL.createObjectURL(f);
+let isEdu=type==='edu';
+let newItem={src:url,user:name,cap:cap,type:type,likes:0,comments:0,shares:0,liked:false,isLive:false,edu:isEdu,srcData:url};
+data.unshift(newItem);
+let currentSaves=JSON.parse(localStorage.getItem('pac_uploads')||'[]');
+currentSaves.unshift({srcData:url,user:name,cap:cap,type:type,edu:isEdu});
+localStorage.setItem('pac_uploads',JSON.stringify(currentSaves.slice(0,100)));
+render(); closeUpload(); toast('Uploaded! ♾️ Total: '+data.length+' videos!'); feed.scrollTop=0;
+}
+async function openLive(){
+document.getElementById('liveBox').classList.add('open');
+try{let s=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user'},audio:true}); liveStream=s; document.getElementById('livePrev').srcObject=s;}catch{toast('Need camera!')}
+}
+function closeLive(){
+document.getElementById('liveBox').classList.remove('open');
+if(!isLiveNow && liveStream){liveStream.getTracks().forEach(t=>t.stop()); liveStream=null; document.getElementById('livePrev').srcObject=null}
+}
+function startLive(){
+if(!liveStream){toast('Allow camera!'); return}
+let name=document.getElementById('liveName').value||'@you';
+let title=document.getElementById('liveTitle').value||'Live now!';
+isLiveNow=true;
+data.unshift({src:'',user:name,cap:title,type:'live',likes:0,comments:0,shares:0,liked:false,isLive:true,viewers:42,stream:liveStream,edu:false});
+render(); document.getElementById('liveBox').classList.remove('open');
+document.getElementById('sBtn').style.display='none'; document.getElementById('eBtn').style.display='block';
+toast('🔴 LIVE! Unlimited mode!'); feed.scrollTop=0;
+}
+function endLive(){
+isLiveNow=false;
+if(liveStream){liveStream.getTracks().forEach(t=>t.stop()); liveStream=null}
+if(data[0]&&data[0].isLive){data[0].isLive=false; data[0].cap+=' (Ended)'; data[0].stream=null}
+document.getElementById('sBtn').style.display='block'; document.getElementById('eBtn').style.display='none';
+document.getElementById('livePrev').srcObject=null;
+render(); toast('Live ended! Saved ♾️');
+}
+function toast(m){let t=document.getElementById('toast'); t.textContent=m; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2200)}
+render();
 </script>
 </body>
 </html>
