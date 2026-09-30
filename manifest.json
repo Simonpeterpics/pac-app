@@ -1,7 +1,7 @@
 {
   "name": "MOJA APP - Logo #1 Glitch",
-  "short_name": "PAC App",
-  "description": "pac app - Red Glitch Shield",
+  "short_name": "moja",
+  "description": "moja app - Red Glitch Shield",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#000000",
